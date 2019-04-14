@@ -10,6 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="mybatis-generator" target="1.8" />
       <module name="producer" target="1.8" />
       <module name="spring-cloud-consul-producer" target="1.8" />
     </bytecodeTargetLevel>
