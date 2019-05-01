@@ -45,7 +45,7 @@ public class ${entity} implements Serializable {
 #end
 
 #if(${entitySerialVersionUID})
-private static final long serialVersionUID=1L;
+    private static final long serialVersionUID=1L;
 #end
 ## ----------  BEGIN 字段循环遍历  ----------
 #foreach($field in ${table.fields})
@@ -64,12 +64,14 @@ private static final long serialVersionUID=1L;
 #end
 #if(${field.keyFlag})
 ## 主键
+#if(${field.convert})
 #if(${field.keyIdentityFlag})
     @TableId(value = "${field.name}", type = IdType.AUTO)
 #elseif(!$null.isNull(${idType}) && "$!idType" != "")
     @TableId(value = "${field.name}", type = IdType.${idType})
 #elseif(${field.convert})
     @TableId("${field.name}")
+#end
 #end
 ## 普通字段
 #elseif(${field.fill})

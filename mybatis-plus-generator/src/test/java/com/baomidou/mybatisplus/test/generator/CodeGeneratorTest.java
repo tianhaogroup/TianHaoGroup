@@ -18,10 +18,10 @@ package com.baomidou.mybatisplus.test.generator;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.PackageConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.InjectionConfig;
+import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.mybatisplus.generator.config.rules.FileType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.mysql.cj.jdbc.Driver;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class CodeGeneratorTest {
 
     @Test
     void generateCode() {
-        String packageName = "com.lihuiquan.genrate";
+        String packageName = "com.emanor.cms";
         fieldPrefix = new String[]{"test"};
         enableTableFieldAnnotation = true;
         tableIdType = IdType.INPUT;
@@ -82,19 +82,35 @@ class CodeGeneratorTest {
             .setColumnNaming(NamingStrategy.underline_to_camel)
             .setEntityTableFieldAnnotationEnable(enableTableFieldAnnotation)
             .setFieldPrefix(fieldPrefix)//test_id -> id, test_type -> type
+            .setEntityLombokModel(true)
+            .setEntityTableFieldAnnotationEnable(false)
             .setInclude(tableNames);//修改替换成你需要的表名，多个表名传数组
         config.setActiveRecord(false)
             .setIdType(tableIdType)
             .setAuthor("lihuiquan")
-            .setOutputDir("d:\\codeGen")
-            .setFileOverride(true);
+            .setOutputDir("F:\\Users\\Administrator\\idea\\emanor-cloud\\em-cms\\src\\main\\java\\")
+            .setFileOverride(true)
+            .setOpen(false);
         if (!serviceClassNameStartWithI) {
             config.setServiceName("%sService");
         }
         config.setMapperName("%sRepository");
+
         new AutoGenerator().setGlobalConfig(config)
+            .setTemplate(new TemplateConfig().setXml(null).setController(null))
             .setDataSource(dataSourceConfig)
             .setStrategy(strategyConfig)
+//            .setCfg(new InjectionConfig() {
+//                @Override
+//                public void initMap() {
+//
+//                }
+//            }.setFileCreate(new IFileCreate() {
+//                @Override
+//                public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
+//                    return true;
+//                }
+//            }))
             .setPackageInfo(
                 new PackageConfig()
                     .setParent(packageName)

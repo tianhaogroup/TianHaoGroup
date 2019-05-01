@@ -152,7 +152,15 @@ public abstract class AbstractTemplateEngine {
      * 处理输出目录
      */
     public AbstractTemplateEngine mkdirs() {
-        getConfigBuilder().getPathInfo().forEach((key, value) -> {
+        ConfigBuilder cb = getConfigBuilder();
+        // 自定义判断
+        InjectionConfig ic = cb.getInjectionConfig();
+        cb.getPathInfo().forEach((key, value) -> {
+            if (null != ic && null != ic.getFileCreate()) {
+                if(!ic.getFileCreate().isCreate(cb, FileType.FOLDER, value)){
+                    return;
+                }
+            }
             File dir = new File(value);
             if (!dir.exists()) {
                 boolean result = dir.mkdirs();

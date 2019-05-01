@@ -44,9 +44,9 @@ package ${package.Entity};
     public class ${entity} implements Serializable {
 </#if>
 
-<#if entitySerialVersionUID>
-    private static final long serialVersionUID = 1L;
-</#if>
+    <#if entitySerialVersionUID>
+        private static final long serialVersionUID = 1L;
+    </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
     <#if field.keyFlag>
@@ -64,6 +64,7 @@ package ${package.Entity};
     </#if>
     <#if field.keyFlag>
     <#-- 主键 -->
+     <#if field.convert>
         <#if field.keyIdentityFlag>
             @TableId(value = "${field.name}", type = IdType.AUTO)
         <#elseif idType??>
@@ -71,6 +72,7 @@ package ${package.Entity};
         <#elseif field.convert>
             @TableId("${field.name}")
         </#if>
+     </#if>
     <#-- 普通字段 -->
     <#elseif field.fill??>
     <#-- -----   存在字段填充设置   ----->
