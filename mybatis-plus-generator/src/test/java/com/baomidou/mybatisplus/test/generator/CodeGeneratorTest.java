@@ -55,46 +55,23 @@ class CodeGeneratorTest {
 
     @Test
     void generateCode() {
-        String packageName = "com.baomidou.springboot";
-        enableTableFieldAnnotation = false;
-        tableIdType = null;
-        generateByTables(packageName + ".noannoidtype", "user");
-        enableTableFieldAnnotation = true;
-        tableIdType = null;
-        generateByTables(packageName + ".noidtype", "user");
-        enableTableFieldAnnotation = false;
-        tableIdType = IdType.INPUT;
-        generateByTables(packageName + ".noanno", "user");
-        enableTableFieldAnnotation = true;
-        tableIdType = IdType.INPUT;
-        generateByTables(packageName + ".both", "user");
-
+        String packageName = "com.lihuiquan.genrate";
         fieldPrefix = new String[]{"test"};
-        enableTableFieldAnnotation = false;
-        tableIdType = null;
-        generateByTables(packageName + ".noannoidtypewithprefix", "user");
-        enableTableFieldAnnotation = true;
-        tableIdType = null;
-        generateByTables(packageName + ".noidtypewithprefix", "user");
-        enableTableFieldAnnotation = false;
-        tableIdType = IdType.INPUT;
-        generateByTables(packageName + ".noannowithprefix", "user");
         enableTableFieldAnnotation = true;
         tableIdType = IdType.INPUT;
-        generateByTables(packageName + ".withannoidtypeprefix", "user");
 
         serviceClassNameStartWithI = false;
-        generateByTables(packageName, "user");
+        generateByTables(packageName, "em_item_publish_worth");
     }
 
     private void generateByTables(String packageName, String... tableNames) {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://localhost:3306/mybatis-plus";
+        String dbUrl = "jdbc:mysql://localhost:3306/emanor?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
             .setUrl(dbUrl)
             .setUsername("root")
-            .setPassword("")
+            .setPassword("root")
             .setDriverName(Driver.class.getName());
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig
@@ -108,12 +85,13 @@ class CodeGeneratorTest {
             .setInclude(tableNames);//修改替换成你需要的表名，多个表名传数组
         config.setActiveRecord(false)
             .setIdType(tableIdType)
-            .setAuthor("K神带你飞")
+            .setAuthor("lihuiquan")
             .setOutputDir("d:\\codeGen")
             .setFileOverride(true);
         if (!serviceClassNameStartWithI) {
             config.setServiceName("%sService");
         }
+        config.setMapperName("%sRepository");
         new AutoGenerator().setGlobalConfig(config)
             .setDataSource(dataSourceConfig)
             .setStrategy(strategyConfig)
