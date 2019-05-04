@@ -47,6 +47,14 @@ public class PackageConfig {
      */
     private String entity = "entity";
     /**
+     * Entity包名
+     */
+    private String request = "request";
+    /**
+     * Entity包名
+     */
+    private String response = "response";
+    /**
      * Enums包名
      */
     private String enums = "enums";

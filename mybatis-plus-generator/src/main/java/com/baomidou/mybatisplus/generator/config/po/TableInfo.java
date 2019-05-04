@@ -38,13 +38,24 @@ import java.util.stream.IntStream;
 public class TableInfo {
 
     private final Set<String> importPackages = new HashSet<>();
+    private final Set<String> controllerImportPackages = new HashSet<>();
     private boolean convert;
     private String name;
     private String comment;
     private String entityName;
+    private String entityVariableName;
+
     private String mapperName;
     private String xmlName;
     private String serviceName;
+    private String serviceVariableName;
+
+    private String requestName;
+    private String requestVariableName;
+
+    private String responseName;
+    private String responseVariableName;
+
     private String serviceImplName;
     private String controllerName;
     private List<TableField> fields;
@@ -57,6 +68,26 @@ public class TableInfo {
     public TableInfo setConvert(boolean convert) {
         this.convert = convert;
         return this;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+        this.entityVariableName=entityName.toLowerCase();
+    }
+
+    public void setRequestName(String requestName) {
+        this.requestName = requestName;
+        this.requestVariableName=requestName.toLowerCase();
+    }
+
+    public void setResponseName(String responseName) {
+        this.responseName = responseName;
+        this.responseVariableName=responseName.toLowerCase();
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+        this.serviceVariableName=serviceName.toLowerCase();
     }
 
     protected TableInfo setConvert(StrategyConfig strategyConfig) {
@@ -122,6 +153,10 @@ public class TableInfo {
     }
     public TableInfo setImportPackages(String pkg) {
         importPackages.add(pkg);
+        return this;
+    }
+    public TableInfo setControllerImportPackages(String pkg) {
+        controllerImportPackages.add(pkg);
         return this;
     }
 

@@ -1,8 +1,21 @@
 package ${package.Controller};
 
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.EnumUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+#foreach($pkg in ${table.controllerImportPackages})
+import ${pkg};
+#end
 #if(${restControllerStyle})
 import org.springframework.web.bind.annotation.RestController;
 #else
@@ -35,7 +48,32 @@ public class ${table.controllerName} extends ${superControllerClass} {
 #else
 public class ${table.controllerName} {
 #end
+    @Autowired
+    private ${table.serviceName} ${table.serviceVariableName};
 
+    @ApiOperation("列表分页接口")
+    @PostMapping(value = "/page" , produces = "application/json")
+    public R page(@Validated @RequestBody ${table.requestName} request){
+        IPage<${entity}> page = new Page<${entity}>(request.getPage() , request.getPageNum()) ;
+        LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<${entity}>().isNotNull(${entity} :: getId) ;
+        #foreach($field in ${table.fields})
+            #if(${field.customType})
+        if(null != request.get${field.upName}()) {
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.eq(${entity} :: get${field.upName} , EnumUtils.valueOf(${field.customType}.class , request.get${field.upName}()))) ;
+        }
+            #elseif(${field.propertyType.equals("String")})
+        if(!StringUtils.isBlank(request.get${field.upName}())) {
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.like(${entity} :: get${field.upName} , request.get${field.upName}())) ;
+        }
+            #else
+        if(null != request.get${field.upName}()) {
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.eq(${entity} :: get${field.upName} , request.get${field.upName}())) ;
+        }
+            #end
+        #end
+        page = ${table.serviceVariableName}.page(page , wrapper) ;
+        return R.ok().put("page" , page);
+    }
 }
 
 #end

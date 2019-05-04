@@ -30,6 +30,8 @@ public interface ConstVal {
     String MODULE_NAME = "ModuleName";
 
     String ENTITY = "Entity";
+    String REQUEST = "Request";
+    String RESPONSE = "Response";
     String ENUMS = "Enum";
     String SERVICE = "Service";
     String SERVICE_IMPL = "ServiceImpl";
@@ -38,6 +40,8 @@ public interface ConstVal {
     String CONTROLLER = "Controller";
 
     String ENTITY_PATH = "entity_path";
+    String REQUEST_PATH = "request_path";
+    String RESPONSE_PATH = "response_path";
     String ENUMS_PATH = "enums_path";
     String SERVICE_PATH = "service_path";
     String SERVICE_IMPL_PATH = "service_impl_path";
@@ -54,6 +58,8 @@ public interface ConstVal {
     String XML_SUFFIX = ".xml";
 
     String TEMPLATE_ENTITY_JAVA = "/templates/entity.java";
+    String TEMPLATE_REQUEST_JAVA = "/templates/request.java";
+    String TEMPLATE_RESPONSE_JAVA = "/templates/response.java";
     String TEMPLATE_ENUMS_JAVA = "/templates/enums.java";
     String TEMPLATE_ENTITY_KT = "/templates/entity.kt";
     String TEMPLATE_MAPPER = "/templates/mapper.java";

@@ -98,7 +98,7 @@ class CodeGeneratorTest {
         config.setMapperName("%sRepository");
 
         new AutoGenerator().setGlobalConfig(config)
-            .setTemplate(new TemplateConfig().setXml(null).setController(null))
+            .setTemplate(new TemplateConfig().setXml(null))
             .setDataSource(dataSourceConfig)
             .setStrategy(strategyConfig)
 //            .setCfg(new InjectionConfig() {

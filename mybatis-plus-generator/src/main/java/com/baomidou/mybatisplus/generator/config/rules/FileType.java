@@ -29,6 +29,8 @@ public enum FileType {
     SERVICE,
     SERVICE_IMPL,
     CONTROLLER,
+    REQUEST,
+    RESPONSE,
     /**
      * 文件夹
      */

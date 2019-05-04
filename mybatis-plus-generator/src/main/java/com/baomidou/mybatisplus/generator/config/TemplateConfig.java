@@ -33,6 +33,10 @@ public class TemplateConfig {
     @Getter(AccessLevel.NONE)
     private String entity = ConstVal.TEMPLATE_ENTITY_JAVA;
 
+    private String request = ConstVal.TEMPLATE_REQUEST_JAVA;
+
+    private String response = ConstVal.TEMPLATE_RESPONSE_JAVA;
+
     private String enums = ConstVal.TEMPLATE_ENUMS_JAVA;
 
     private String entityKt = ConstVal.TEMPLATE_ENTITY_KT;

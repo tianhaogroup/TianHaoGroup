@@ -42,6 +42,7 @@ public class TableField {
      */
     private boolean keyIdentityFlag;
     private String name;
+    private String upName;
     private String type;
     private String propertyName;
     private IColumnType columnType;
@@ -82,6 +83,9 @@ public class TableField {
     public TableField setPropertyName(StrategyConfig strategyConfig, String propertyName) {
         this.propertyName = propertyName;
         this.setConvert(strategyConfig);
+        String str1=propertyName.substring(0,1).toUpperCase();
+        String str2=propertyName.substring(1,propertyName.length());
+        this.upName=str1+str2;
         return this;
     }
     public TableField setCustomType( String customType) {
@@ -92,7 +96,7 @@ public class TableField {
     public String getPropertyType() {
         if (null != columnType) {
             return columnType.getType();
-        }else{
+        } else{
             return customType;
         }
     }

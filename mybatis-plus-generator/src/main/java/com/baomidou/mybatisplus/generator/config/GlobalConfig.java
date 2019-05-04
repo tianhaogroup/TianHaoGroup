@@ -93,6 +93,8 @@ public class GlobalConfig {
     private String mapperName;
     private String xmlName;
     private String serviceName;
+    private String requestName;
+    private String responseName;
     private String serviceImplName;
     private String controllerName;
     /**

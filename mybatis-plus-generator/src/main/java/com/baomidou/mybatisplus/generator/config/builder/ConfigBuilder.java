@@ -227,6 +227,8 @@ public class ConfigBuilder {
         packageInfo = new HashMap<>(8);
         packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
+        packageInfo.put(ConstVal.REQUEST, joinPackage(config.getParent(), config.getRequest()));
+        packageInfo.put(ConstVal.RESPONSE, joinPackage(config.getParent(), config.getResponse()));
         packageInfo.put(ConstVal.ENUMS, joinPackage(config.getParent(), config.getEnums()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
         packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
@@ -243,6 +245,8 @@ public class ConfigBuilder {
             pathInfo = new HashMap<>(6);
             setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), outputDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
             setPathInfo(pathInfo, template.getMapper(), outputDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
+            setPathInfo(pathInfo, template.getRequest(), outputDir, ConstVal.REQUEST_PATH, ConstVal.REQUEST);
+            setPathInfo(pathInfo, template.getResponse(), outputDir, ConstVal.RESPONSE_PATH, ConstVal.RESPONSE);
             setPathInfo(pathInfo, template.getEnums(), outputDir, ConstVal.ENUMS_PATH, ConstVal.ENUMS);
             setPathInfo(pathInfo, template.getXml(), outputDir, ConstVal.XML_PATH, ConstVal.XML);
             setPathInfo(pathInfo, template.getService(), outputDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
@@ -334,6 +338,16 @@ public class ConfigBuilder {
                 tableInfo.setMapperName(String.format(globalConfig.getMapperName(), entityName));
             } else {
                 tableInfo.setMapperName(entityName + ConstVal.MAPPER);
+            }
+            if (StringUtils.isNotEmpty(globalConfig.getRequestName())) {
+                tableInfo.setRequestName(String.format(globalConfig.getRequestName(), entityName));
+            } else {
+                tableInfo.setRequestName(entityName + ConstVal.REQUEST);
+            }
+            if (StringUtils.isNotEmpty(globalConfig.getResponseName())) {
+                tableInfo.setResponseName(String.format(globalConfig.getResponseName(), entityName));
+            } else {
+                tableInfo.setResponseName(entityName + ConstVal.RESPONSE);
             }
             if (StringUtils.isNotEmpty(globalConfig.getXmlName())) {
                 tableInfo.setXmlName(String.format(globalConfig.getXmlName(), entityName));

@@ -88,7 +88,7 @@ public abstract class AbstractTemplateEngine {
                                     enums=new TableEnumInfo();
                                     String str1=field.getName().substring(0,1).toUpperCase();
                                     String str2=field.getName().substring(1,field.getName().length());
-                                    enums.setName(tableInfo.getEntityName()+str1+str2+"Enum");
+                                    enums.setName(tableInfo.getEntityName()+str1+str2+ConstVal.ENUMS);
                                 }
                                 TableEnum tableEnum=new TableEnum();
                                 tableEnum.setName(ChineseChangeToPinyin.ToPinyin(name).toUpperCase());
@@ -128,7 +128,9 @@ public abstract class AbstractTemplateEngine {
                     for (TableEnumInfo tableEnumInfo:enumFields) {
                         objectMap.put("tableEnumInfo",tableEnumInfo);
                         String enumsFile = String.format((pathInfo.get(ConstVal.ENUMS_PATH) + File.separator + "%s" + suffixJavaOrKt()), tableEnumInfo.getName());
-                        tableInfo.setImportPackages(getConfigBuilder().getPackageInfo().get("Enum")+"."+tableEnumInfo.getName());
+                        String packageUrl=getConfigBuilder().getPackageInfo().get(ConstVal.ENUMS)+"."+tableEnumInfo.getName();
+                        tableInfo.setImportPackages(packageUrl);
+                        tableInfo.setControllerImportPackages(packageUrl);
                         if (isCreate(FileType.ENUMS, enumsFile)) {
                             writer(objectMap, templateFilePath(template.getEnums()), enumsFile);
                         }
@@ -136,11 +138,28 @@ public abstract class AbstractTemplateEngine {
                     }
                 }
                 // Mp.java
-
                 if (null != entityName && null != pathInfo.get(ConstVal.ENTITY_PATH)) {
-                    String entityFile = String.format((pathInfo.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
+                    String fileName=String.format(File.separator + "%s" + suffixJavaOrKt(),entityName);
+                    String entityFile =String.format((pathInfo.get(ConstVal.ENTITY_PATH) +File.separator + "%s" + suffixJavaOrKt()),entityName);
                     if (isCreate(FileType.ENTITY, entityFile)) {
+                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.ENTITY)+"."+fileName);
                         writer(objectMap, templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isKotlin())), entityFile);
+                    }
+                }
+                //request
+                if (null != entityName && null != pathInfo.get(ConstVal.REQUEST_PATH)) {
+                    String requestFile =String.format((pathInfo.get(ConstVal.REQUEST_PATH) +File.separator + tableInfo.getRequestName()+suffixJavaOrKt()),entityName);
+                    if (isCreate(FileType.REQUEST, requestFile)) {
+                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.REQUEST)+"."+tableInfo.getRequestName());
+                        writer(objectMap, templateFilePath(template.getRequest()), requestFile);
+                    }
+                }
+                //response
+                if (null != entityName && null != pathInfo.get(ConstVal.RESPONSE_PATH)) {
+                    String responseFile =String.format((pathInfo.get(ConstVal.RESPONSE_PATH) +File.separator + tableInfo.getResponseName() +suffixJavaOrKt()),entityName);
+                    if (isCreate(FileType.RESPONSE, responseFile)) {
+                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.RESPONSE)+"."+tableInfo.getResponseName());
+                        writer(objectMap, templateFilePath(template.getResponse()), responseFile);
                     }
                 }
                 // MpMapper.java
@@ -159,8 +178,11 @@ public abstract class AbstractTemplateEngine {
                 }
                 // IMpService.java
                 if (null != tableInfo.getServiceName() && null != pathInfo.get(ConstVal.SERVICE_PATH)) {
+                    //String serviceFile = String.format((pathInfo.get(ConstVal.SERVICE_PATH) + File.separator + tableInfo.getServiceName() + suffixJavaOrKt()), entityName);
+                    String fileName=String.format(File.separator + "%s" + tableInfo.getServiceName()+ suffixJavaOrKt(),entityName);
                     String serviceFile = String.format((pathInfo.get(ConstVal.SERVICE_PATH) + File.separator + tableInfo.getServiceName() + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.SERVICE, serviceFile)) {
+                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.SERVICE)+"."+fileName);
                         writer(objectMap, templateFilePath(template.getService()), serviceFile);
                     }
                 }
