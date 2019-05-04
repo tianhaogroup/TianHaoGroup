@@ -227,6 +227,7 @@ public class ConfigBuilder {
         packageInfo = new HashMap<>(8);
         packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
+        packageInfo.put(ConstVal.ENUMS, joinPackage(config.getParent(), config.getEnums()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
         packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
         packageInfo.put(ConstVal.SERVICE, joinPackage(config.getParent(), config.getService()));
@@ -242,6 +243,7 @@ public class ConfigBuilder {
             pathInfo = new HashMap<>(6);
             setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), outputDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
             setPathInfo(pathInfo, template.getMapper(), outputDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
+            setPathInfo(pathInfo, template.getEnums(), outputDir, ConstVal.ENUMS_PATH, ConstVal.ENUMS);
             setPathInfo(pathInfo, template.getXml(), outputDir, ConstVal.XML_PATH, ConstVal.XML);
             setPathInfo(pathInfo, template.getService(), outputDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
             setPathInfo(pathInfo, template.getServiceImpl(), outputDir, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);

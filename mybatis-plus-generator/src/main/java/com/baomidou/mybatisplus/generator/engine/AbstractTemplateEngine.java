@@ -18,11 +18,14 @@ package com.baomidou.mybatisplus.generator.engine;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.po.TableEnum;
+import com.baomidou.mybatisplus.generator.config.po.TableEnumInfo;
+import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +34,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.toolkit.PackageHelper;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.ConstVal;
-import com.baomidou.mybatisplus.generator.config.FileOutConfig;
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.FileType;
@@ -70,7 +69,42 @@ public abstract class AbstractTemplateEngine {
     public AbstractTemplateEngine batchOutput() {
         try {
             List<TableInfo> tableInfoList = getConfigBuilder().getTableInfoList();
+            List<TableEnumInfo> enumFields=new ArrayList<>();
             for (TableInfo tableInfo : tableInfoList) {
+                if(null!=tableInfo.getFields()&&!tableInfo.getFields().isEmpty()){
+                    tableInfo.getFields().parallelStream().forEach(field ->{
+                        String comment=field.getComment();
+                        Pattern pattern = Pattern.compile("(\\d+[^\\d]+)");
+                        Matcher matcher = pattern.matcher(comment );
+                        Map<String,Object> values=new HashMap<>();
+                        TableEnumInfo enums=null;
+                        while (matcher.find()) {
+                            //String values=matcher.group();
+                            String name_value=matcher.group(1);
+                            String name=name_value.replaceAll("\\d|[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]", "");
+                            String value=name_value.replaceAll("\\D", "");
+                            if(StringUtils.isNotEmpty(name)&&StringUtils.isNotEmpty(value)){
+                                if(null==enums){
+                                    enums=new TableEnumInfo();
+                                    String str1=field.getName().substring(0,1).toUpperCase();
+                                    String str2=field.getName().substring(1,field.getName().length());
+                                    enums.setName(tableInfo.getEntityName()+str1+str2+"Enum");
+                                }
+                                TableEnum tableEnum=new TableEnum();
+                                tableEnum.setName(ChineseChangeToPinyin.ToPinyin(name).toUpperCase());
+                                tableEnum.setValue(Integer.valueOf(value));
+                                tableEnum.setDesc(name);
+                                enums.getTableEnums().add(tableEnum);
+                            }
+                            values.put(name,value);
+                            //System.out.println(collegeId);//14000
+                        }
+                        if(null!=enums){
+                            field.setCustomType(enums.getName());
+                            enumFields.add(enums);
+                        }
+                    });
+                }
                 Map<String, Object> objectMap = getObjectMap(tableInfo);
                 Map<String, String> pathInfo = getConfigBuilder().getPathInfo();
                 TemplateConfig template = getConfigBuilder().getTemplate();
@@ -88,8 +122,21 @@ public abstract class AbstractTemplateEngine {
                         }
                     }
                 }
-                // Mp.java
                 String entityName = tableInfo.getEntityName();
+                // enums.java
+                if (!enumFields.isEmpty()&&null != entityName && null != pathInfo.get(ConstVal.ENUMS_PATH)) {
+                    for (TableEnumInfo tableEnumInfo:enumFields) {
+                        objectMap.put("tableEnumInfo",tableEnumInfo);
+                        String enumsFile = String.format((pathInfo.get(ConstVal.ENUMS_PATH) + File.separator + "%s" + suffixJavaOrKt()), tableEnumInfo.getName());
+                        tableInfo.setImportPackages(getConfigBuilder().getPackageInfo().get("Enum")+"."+tableEnumInfo.getName());
+                        if (isCreate(FileType.ENUMS, enumsFile)) {
+                            writer(objectMap, templateFilePath(template.getEnums()), enumsFile);
+                        }
+
+                    }
+                }
+                // Mp.java
+
                 if (null != entityName && null != pathInfo.get(ConstVal.ENTITY_PATH)) {
                     String entityFile = String.format((pathInfo.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.ENTITY, entityFile)) {

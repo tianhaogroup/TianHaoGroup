@@ -47,6 +47,10 @@ public class PackageConfig {
      */
     private String entity = "entity";
     /**
+     * Enums包名
+     */
+    private String enums = "enums";
+    /**
      * Service包名
      */
     private String service = "service";

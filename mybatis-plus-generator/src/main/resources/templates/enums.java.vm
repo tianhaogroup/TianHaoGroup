@@ -1,0 +1,40 @@
+package ${package.Enum};
+
+import com.baomidou.mybatisplus.core.enums.IEnum;
+import java.io.Serializable;
+
+/**
+ * <p>
+ * $!{table.comment} 枚举
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+public enum ${tableEnumInfo.name} implements IEnum {
+    #foreach($field in ${tableEnumInfo.tableEnums})
+        ${field.name}(${field.value},"${field.desc}"),
+    #end
+    ;
+    private Integer value ;
+    private String desc ;
+
+    ${tableEnumInfo.name}(Integer value , String desc) {
+        this.value = value ;
+        this.desc = desc ;
+    }
+
+    @Override
+    public Serializable getValue() {
+        return this.value;
+        }
+
+    public String getDesc(){
+        return this.desc;
+        }
+
+    @Override
+    public String toString() {
+        return this.getDesc();
+        }
+}

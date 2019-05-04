@@ -45,6 +45,7 @@ public class TableField {
     private String type;
     private String propertyName;
     private IColumnType columnType;
+    private String customType;
     private String comment;
     private String fill;
     /**
@@ -83,12 +84,17 @@ public class TableField {
         this.setConvert(strategyConfig);
         return this;
     }
-
+    public TableField setCustomType( String customType) {
+        this.columnType=null;
+        this.customType=customType;
+        return this;
+    }
     public String getPropertyType() {
         if (null != columnType) {
             return columnType.getType();
+        }else{
+            return customType;
         }
-        return null;
     }
 
     /**

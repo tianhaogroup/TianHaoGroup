@@ -30,6 +30,7 @@ public interface ConstVal {
     String MODULE_NAME = "ModuleName";
 
     String ENTITY = "Entity";
+    String ENUMS = "Enum";
     String SERVICE = "Service";
     String SERVICE_IMPL = "ServiceImpl";
     String MAPPER = "Mapper";
@@ -37,6 +38,7 @@ public interface ConstVal {
     String CONTROLLER = "Controller";
 
     String ENTITY_PATH = "entity_path";
+    String ENUMS_PATH = "enums_path";
     String SERVICE_PATH = "service_path";
     String SERVICE_IMPL_PATH = "service_impl_path";
     String MAPPER_PATH = "mapper_path";
@@ -52,6 +54,7 @@ public interface ConstVal {
     String XML_SUFFIX = ".xml";
 
     String TEMPLATE_ENTITY_JAVA = "/templates/entity.java";
+    String TEMPLATE_ENUMS_JAVA = "/templates/enums.java";
     String TEMPLATE_ENTITY_KT = "/templates/entity.kt";
     String TEMPLATE_MAPPER = "/templates/mapper.java";
     String TEMPLATE_XML = "/templates/mapper.xml";

@@ -56,12 +56,12 @@ class CodeGeneratorTest {
     @Test
     void generateCode() {
         String packageName = "com.emanor.cms";
-        fieldPrefix = new String[]{"test"};
+        fieldPrefix = new String[]{"test","em_"};
         enableTableFieldAnnotation = true;
         tableIdType = IdType.INPUT;
 
         serviceClassNameStartWithI = false;
-        generateByTables(packageName, "em_item_publish_worth");
+        generateByTables(packageName, "e_redeem_pro_code");
     }
 
     private void generateByTables(String packageName, String... tableNames) {
@@ -82,6 +82,7 @@ class CodeGeneratorTest {
             .setColumnNaming(NamingStrategy.underline_to_camel)
             .setEntityTableFieldAnnotationEnable(enableTableFieldAnnotation)
             .setFieldPrefix(fieldPrefix)//test_id -> id, test_type -> type
+            .setTablePrefix("em_","e_")
             .setEntityLombokModel(true)
             .setEntityTableFieldAnnotationEnable(false)
             .setInclude(tableNames);//修改替换成你需要的表名，多个表名传数组

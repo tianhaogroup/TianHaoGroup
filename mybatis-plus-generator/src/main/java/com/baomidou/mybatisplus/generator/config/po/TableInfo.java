@@ -120,7 +120,6 @@ public class TableInfo {
         }
         return this;
     }
-
     public TableInfo setImportPackages(String pkg) {
         importPackages.add(pkg);
         return this;
