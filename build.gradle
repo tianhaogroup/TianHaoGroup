@@ -131,6 +131,7 @@ subprojects {
     }
 
     dependencies {
+        compile "${lib.lombok}"
         annotationProcessor "${lib.lombok}"
         compileOnly "${lib.lombok}"
 

@@ -61,17 +61,17 @@ class CodeGeneratorTest {
         tableIdType = IdType.INPUT;
 
         serviceClassNameStartWithI = false;
-        generateByTables(packageName, "e_redeem_pro_code");
+        generateByTables(packageName, "em_item_delivery");
     }
 
     private void generateByTables(String packageName, String... tableNames) {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://localhost:3306/emanor?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8";
+        String dbUrl = "jdbc:mysql://localhost:3306/emanor-2.0?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
             .setUrl(dbUrl)
             .setUsername("root")
-            .setPassword("root")
+            .setPassword("123456")
             .setDriverName(Driver.class.getName());
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig
@@ -89,7 +89,7 @@ class CodeGeneratorTest {
         config.setActiveRecord(false)
             .setIdType(tableIdType)
             .setAuthor("lihuiquan")
-            .setOutputDir("F:\\Users\\Administrator\\idea\\emanor-cloud\\em-cms\\src\\main\\java\\")
+            .setOutputDir("D:\\lihuiquan\\emanor-cloud\\em-product\\src\\main\\java")
             .setFileOverride(true)
             .setOpen(false);
         if (!serviceClassNameStartWithI) {

@@ -86,8 +86,8 @@ public abstract class AbstractTemplateEngine {
                             if(StringUtils.isNotEmpty(name)&&StringUtils.isNotEmpty(value)){
                                 if(null==enums){
                                     enums=new TableEnumInfo();
-                                    String str1=field.getName().substring(0,1).toUpperCase();
-                                    String str2=field.getName().substring(1,field.getName().length());
+                                    String str1=field.getUpName().substring(0,1).toUpperCase();
+                                    String str2=field.getUpName().substring(1,field.getUpName().length());
                                     enums.setName(tableInfo.getEntityName()+str1+str2+ConstVal.ENUMS);
                                 }
                                 TableEnum tableEnum=new TableEnum();
@@ -142,7 +142,7 @@ public abstract class AbstractTemplateEngine {
                     String fileName=String.format(File.separator + "%s" + suffixJavaOrKt(),entityName);
                     String entityFile =String.format((pathInfo.get(ConstVal.ENTITY_PATH) +File.separator + "%s" + suffixJavaOrKt()),entityName);
                     if (isCreate(FileType.ENTITY, entityFile)) {
-                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.ENTITY)+"."+fileName);
+                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.ENTITY)+"."+tableInfo.getEntityName());
                         writer(objectMap, templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isKotlin())), entityFile);
                     }
                 }
@@ -182,7 +182,7 @@ public abstract class AbstractTemplateEngine {
                     String fileName=String.format(File.separator + "%s" + tableInfo.getServiceName()+ suffixJavaOrKt(),entityName);
                     String serviceFile = String.format((pathInfo.get(ConstVal.SERVICE_PATH) + File.separator + tableInfo.getServiceName() + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.SERVICE, serviceFile)) {
-                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.SERVICE)+"."+fileName);
+                        tableInfo.setControllerImportPackages(getConfigBuilder().getPackageInfo().get(ConstVal.SERVICE)+"."+tableInfo.getServiceName());
                         writer(objectMap, templateFilePath(template.getService()), serviceFile);
                     }
                 }
