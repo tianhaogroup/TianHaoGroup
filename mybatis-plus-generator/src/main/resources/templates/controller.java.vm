@@ -13,6 +13,9 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.EnumUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.emanor.general.enums.ResponseMsgEnum;
+import com.emanor.general.protocols.BasicResponse;
+import com.emanor.general.protocols.BasicResponseGenerator;
 #foreach($pkg in ${table.controllerImportPackages})
 import ${pkg};
 #end
@@ -53,13 +56,13 @@ public class ${table.controllerName} {
 
     @ApiOperation("列表分页接口")
     @PostMapping(value = "/page" , produces = "application/json")
-    public R page(@Validated @RequestBody ${table.requestName} request){
+    public BasicResponse<IPage> page(@Validated @RequestBody ${table.requestName} request){
         IPage<${entity}> page = new Page<${entity}>(request.getPage() , request.getPageNum()) ;
         LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<${entity}>().isNotNull(${entity} :: getId) ;
         #foreach($field in ${table.fields})
             #if(${field.customType})
         if(null != request.get${field.upName}()) {
-            wrapper.and(${field.propertyName} -> ${field.propertyName}.eq(${entity} :: get${field.upName} , EnumUtils.valueOf(${field.customType}.class , request.get${field.upName}()))) ;
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.eq(${entity} :: get${field.upName} , request.get${field.upName}())) ;
         }
             #elseif(${field.propertyType.equals("String")})
         if(!StringUtils.isBlank(request.get${field.upName}())) {
@@ -72,7 +75,7 @@ public class ${table.controllerName} {
             #end
         #end
         page = ${table.serviceVariableName}.page(page , wrapper) ;
-        return R.ok().put("page" , page);
+        return BasicResponseGenerator.genResult(ResponseMsgEnum.SUCCESS , page);
     }
 }
 
