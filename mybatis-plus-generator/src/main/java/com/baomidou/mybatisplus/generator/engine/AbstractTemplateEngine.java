@@ -74,6 +74,11 @@ public abstract class AbstractTemplateEngine {
                 if(null!=tableInfo.getFields()&&!tableInfo.getFields().isEmpty()){
                     tableInfo.getFields().parallelStream().forEach(field ->{
                         String comment=field.getComment();
+                        if(field.getPropertyName().toLowerCase().equals("status")){
+                            field.setCustomType("SystemStatusEnum");
+                            tableInfo.setImportPackages("com.emanor.general.enums.SystemStatusEnum");
+                            return;
+                        }
                         Pattern pattern = Pattern.compile("(\\d+[^\\d]+)");
                         Matcher matcher = pattern.matcher(comment );
                         Map<String,Object> values=new HashMap<>();

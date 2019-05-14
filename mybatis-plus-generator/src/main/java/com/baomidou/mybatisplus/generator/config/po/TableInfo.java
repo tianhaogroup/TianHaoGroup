@@ -40,6 +40,9 @@ public class TableInfo {
     private final Set<String> importPackages = new HashSet<>();
     private final Set<String> controllerImportPackages = new HashSet<>();
     private boolean convert;
+    private boolean hasStatus;
+    private boolean hasCreateTime;
+    private boolean hasOperater;
     private String name;
     private String comment;
     private String entityName;
@@ -70,10 +73,7 @@ public class TableInfo {
         return this;
     }
 
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-        this.entityVariableName=entityName.toLowerCase();
-    }
+
 
     public void setRequestName(String requestName) {
         this.requestName = requestName;
@@ -117,6 +117,7 @@ public class TableInfo {
 
     public TableInfo setEntityName(StrategyConfig strategyConfig, String entityName) {
         this.entityName = entityName;
+        this.entityVariableName=entityName.toLowerCase();
         this.setConvert(strategyConfig);
         return this;
     }

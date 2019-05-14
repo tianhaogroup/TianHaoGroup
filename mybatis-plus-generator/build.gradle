@@ -12,4 +12,6 @@ dependencies {
     testCompile "${lib.mysql}"
     testCompile "${lib.'logback-classic'}"
     testCompile "${lib.'swagger-annotations'}"
+    group = 'mybatis.plus.generator'
+    version = '1.0-SNAPSHOT'
 }

@@ -23,4 +23,6 @@ dependencies {
 
     testCompile "${lib.'spring-context-support'}"
     testCompile "${lib.'spring-jdbc'}"
+    group = 'mybatis.plus'
+    version = '1.0-SNAPSHOT'
 }

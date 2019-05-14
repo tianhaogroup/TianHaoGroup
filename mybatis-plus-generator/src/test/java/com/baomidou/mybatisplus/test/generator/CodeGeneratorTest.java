@@ -47,6 +47,11 @@ class CodeGeneratorTest {
      */
     private String[] fieldPrefix = null;
     /**
+     * 是否去掉生成实体的前缀
+     */
+    private String[] tablePrefix = null;
+    private String modelName="item";
+    /**
      * 生成的Service 接口类名是否以I开头
      * <p>默认是以I开头</p>
      * <p>user表 -> IUserService, UserServiceImpl</p>
@@ -55,13 +60,18 @@ class CodeGeneratorTest {
 
     @Test
     void generateCode() {
-        String packageName = "com.emanor.cms";
+
+        String packageName = "com.emanor."+modelName;
         fieldPrefix = new String[]{"test","em_"};
+        tablePrefix = new String[]{"em_"};
         enableTableFieldAnnotation = true;
         tableIdType = IdType.INPUT;
 
         serviceClassNameStartWithI = false;
-        generateByTables(packageName, "em_item_delivery");
+        //"em_item_publish_schedule","em_item_relation"
+        //"em_order_delivery_info","em_order_delivery_track","em_order_discount",
+        //                "em_order_publish","em_order_publish_comment","em_order_publish_schedule"
+        generateByTables(packageName, "em_item_delivery","em_item_publish_schedule","em_item_relation");
     }
 
     private void generateByTables(String packageName, String... tableNames) {
@@ -81,15 +91,16 @@ class CodeGeneratorTest {
             .setNaming(NamingStrategy.underline_to_camel)
             .setColumnNaming(NamingStrategy.underline_to_camel)
             .setEntityTableFieldAnnotationEnable(enableTableFieldAnnotation)
+            //.setSuperControllerClass("")
             .setFieldPrefix(fieldPrefix)//test_id -> id, test_type -> type
-            .setTablePrefix("em_","e_")
+            .setTablePrefix(tablePrefix)
             .setEntityLombokModel(true)
             .setEntityTableFieldAnnotationEnable(false)
             .setInclude(tableNames);//修改替换成你需要的表名，多个表名传数组
         config.setActiveRecord(false)
             .setIdType(tableIdType)
             .setAuthor("lihuiquan")
-            .setOutputDir("D:\\lihuiquan\\emanor-cloud\\em-product\\src\\main\\java")
+            .setOutputDir("D:\\lihuiquan\\emanor-cloud\\em-"+modelName+"\\src\\main\\java")
             .setFileOverride(true)
             .setOpen(false);
         if (!serviceClassNameStartWithI) {
@@ -117,6 +128,7 @@ class CodeGeneratorTest {
                     .setParent(packageName)
                     .setController("controller")
                     .setEntity("entity")
+                    .setMapper("repository")
             ).execute();
     }
 }

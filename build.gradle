@@ -129,12 +129,14 @@ subprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
-
+    group = 'mybatis.plus.root'
+    version = '1.0-SNAPSHOT'
+    
     dependencies {
         compile "${lib.lombok}"
         annotationProcessor "${lib.lombok}"
         compileOnly "${lib.lombok}"
-
+        apply plugin: 'maven'
         testAnnotationProcessor "${lib.lombok}"
         testCompileOnly "${lib.lombok}"
         testImplementation("${lib["assertj-core"]}")

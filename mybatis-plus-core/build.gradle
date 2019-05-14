@@ -17,4 +17,6 @@ dependencies {
     testCompile "${lib.druid}"
     testCompile "${lib.fastjson}"
     testCompile "${lib.tomcatjdbc}"
+    group = 'mybatis.plus.core'
+    version = '1.0-SNAPSHOT'
 }

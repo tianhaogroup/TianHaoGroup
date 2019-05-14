@@ -16,6 +16,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.emanor.general.enums.ResponseMsgEnum;
 import com.emanor.general.protocols.BasicResponse;
 import com.emanor.general.protocols.BasicResponseGenerator;
+import lombok.extern.slf4j.Slf4j;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.emanor.commons.beans.CglibUtil;
+import java.util.List;
 #foreach($pkg in ${table.controllerImportPackages})
 import ${pkg};
 #end
@@ -41,6 +45,7 @@ import ${superControllerClassPackage};
 #else
 @Controller
 #end
+@Slf4j
 @RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
 #if(${kotlin})
 class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
@@ -76,6 +81,68 @@ public class ${table.controllerName} {
         #end
         page = ${table.serviceVariableName}.page(page , wrapper) ;
         return BasicResponseGenerator.genResult(ResponseMsgEnum.SUCCESS , page);
+    }
+    @ApiOperation("列表接口")
+    @PostMapping("/list")
+    public BasicResponse<List<${entity}>> list(@Validated @RequestBody ${table.requestName} request){
+        LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<${entity}>().isNotNull(${entity} :: getId) ;
+        #foreach($field in ${table.fields})
+        #if(${field.customType})
+        if(null != request.get${field.upName}()) {
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.eq(${entity} :: get${field.upName} , request.get${field.upName}())) ;
+        }
+        #elseif(${field.propertyType.equals("String")})
+        if(!StringUtils.isBlank(request.get${field.upName}())) {
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.like(${entity} :: get${field.upName} , request.get${field.upName}())) ;
+        }
+        #else
+        if(null != request.get${field.upName}()) {
+            wrapper.and(${field.propertyName} -> ${field.propertyName}.eq(${entity} :: get${field.upName} , request.get${field.upName}())) ;
+        }
+        #end
+        #end
+        List<${entity}> ${table.entityVariableName}List = ${table.serviceVariableName}.list(wrapper);
+        return BasicResponseGenerator.genResult(ResponseMsgEnum.SUCCESS , ${table.entityVariableName}List) ;
+    }
+    @GetMapping("/info/{id}")
+    @ApiOperation("$!{table.comment}详情")
+    public BasicResponse<${entity}> info(@PathVariable("id") String id){
+        try{
+            if(StringUtils.isBlank(id)) {
+                log.error("Parameter exception id:{}",id);
+                return BasicResponseGenerator.genResult(ResponseMsgEnum.PARAM_VERIFY_FALL , "id不能为空");
+            }
+            ${entity} ${table.entityVariableName} = ${table.serviceVariableName}.getById(id) ;
+            return BasicResponseGenerator.genResult(ResponseMsgEnum.SUCCESS , ${table.entityVariableName});
+        }catch (Exception e){
+            log.error("Method execution exception id:{}",id);
+            return BasicResponseGenerator.genResult(ResponseMsgEnum.EXCEPTION_COMMON_FAILED , "系统繁忙");
+        }
+
+    }
+    @ApiOperation("配送规则保存")
+    @PostMapping(value = "/save" , produces = "application/json")
+    public BasicResponse<${entity}> save(@Validated @RequestBody ${table.requestName} request){
+        try{
+            ${entity} ${table.entityVariableName} = new ${entity}() ;
+            CglibUtil.getCopier(${table.requestName}.class , ${entity}.class).copy(request , ${table.entityVariableName} , null);
+            if(null == request.getId()) {
+                ${table.entityVariableName}.setId(IdWorker.getId());
+                #if(${table.hasStatus})
+                ${table.entityVariableName}.setStatus(SystemStatus.ENABLED);
+                #end
+                #if(${table.hasCreateTime})
+                ${table.entityVariableName}.setCreateTime(LocalDateTime.now());
+                #end
+            }else{
+                ${table.entityVariableName}.setId(Long.valueOf(request.getId()));
+            }
+            ${table.serviceVariableName}.saveOrUpdate(${table.entityVariableName});
+            return BasicResponseGenerator.genResult(ResponseMsgEnum.SUCCESS , ${table.entityVariableName});
+        }catch (Exception e){
+            log.error("Method execution exception request:{}",request);
+            return BasicResponseGenerator.genResult(ResponseMsgEnum.EXCEPTION_COMMON_FAILED , "系统繁忙");
+        }
     }
 }
 

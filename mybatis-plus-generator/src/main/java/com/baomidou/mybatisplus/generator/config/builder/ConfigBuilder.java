@@ -639,6 +639,15 @@ public class ConfigBuilder {
                         tableFillList.stream().filter(tf -> tf.getFieldName().equalsIgnoreCase(field.getName()))
                             .findFirst().ifPresent(tf -> field.setFill(tf.getFieldFill().name()));
                     }
+                    if(field.getPropertyName().equals("status")){
+                        tableInfo.setHasStatus(true);
+                    }
+                    if(field.getPropertyName().equals("createTime")){
+                        tableInfo.setHasCreateTime(true);
+                    }
+                    if(field.getPropertyName().equals("operater")){
+                        tableInfo.setHasOperater(true);
+                    }
                     fieldList.add(field);
                 }
             }
